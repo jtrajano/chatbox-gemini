@@ -1,5 +1,5 @@
-import { useEffect, useState} from 'react'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
 import { Button } from './components/ui/button';
 
 function App() {
@@ -11,18 +11,18 @@ function App() {
   // }, []);
 
   async function handleClick() {
-    const response = await fetch('/api/hello')
-    const data = await response.text()
-    setMessage(data)
+    const response = await fetch('/api/hello');
+    const data = await response.text();
+    setMessage(data);
   }
 
   return (
-   <div>
-    <p className={`font-bold p-4 text-3xl`}>{message}</p>
+    <div>
+      <p className={`font-bold p-4 text-3xl`}>{message}</p>
 
-    <Button onClick={handleClick}>Destructive</Button>
+      <Button onClick={handleClick}>Destructive</Button>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
