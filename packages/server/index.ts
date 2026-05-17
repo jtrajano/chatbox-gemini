@@ -4,14 +4,14 @@ import express, {
   type Application,
 } from 'express';
 import dotenv from 'dotenv';
-import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '',
 });
 
 // Middleware to parse JSON
@@ -23,15 +23,24 @@ app.get('/api/hello', (req: Request, res: Response) => {
 });
 
 app.post('/api/chat', async (req: Request, res: Response) => {
-  const { prompt } = req.body;
-  const response = await client.responses.create({
-    model: 'gpt-4o-mini',
-    input: prompt,
-    temperature: 0.2,
-    max_output_tokens: 100,
-  });
+  try {
+    const { prompt } = req.body;
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        temperature: 0.2,
+        maxOutputTokens: 100,
+      },
+    });
 
-  res.json({ message: response.output_text });
+    res.json({ message: response.text });
+  } catch (error: unknown) {
+    console.error('Gemini API Error:', error);
+    const message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+    res.status(500).json({ error: message });
+  }
 });
 
 // Example REST endpoint (POST)
