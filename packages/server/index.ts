@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Basic GET route
-app.get('/', (req: Request, res: Response) => {
-  res.send(process.env.OPENAI_API_KEY);
+app.get('/api/hello', (req: Request, res: Response) => {
+  res.send('Hello Jeff!');
 });
 
 // Example REST endpoint (POST)
